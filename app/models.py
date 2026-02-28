@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -27,8 +27,16 @@ class ImportRun(Base):
 class Event(Base):
     __tablename__ = "events"
 
+    # Compound indexes for common filter combinations used in queries:
+    #   - (level, source): WHERE level=? AND source=?
+    #   - (timestamp, level): ORDER BY timestamp + filter by level
+    __table_args__ = (
+        Index("ix_event_level_source", "level", "source"),
+        Index("ix_event_timestamp_level", "timestamp", "level"),
+    )
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
 
     source: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
     level: Mapped[str] = mapped_column(String(8), nullable=False, index=True)  # INFO/WARN/ERROR

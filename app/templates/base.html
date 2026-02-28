@@ -4,8 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Ops Mini Dashboard{% endblock %}</title>
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem("ops-theme");
+                if (savedTheme === "light" || savedTheme === "dark") {
+                    document.documentElement.setAttribute("data-theme", savedTheme);
+                }
+            } catch (e) {
+                // Ignore storage access issues in private mode.
+            }
+        })();
+    </script>
     <link rel="stylesheet" href="/static/css/app.css">
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <script src="/static/js/theme.js" defer></script>
 </head>
 <body>
 <header class="site-header">
@@ -19,6 +32,9 @@
             <a href="/ui/events">Events</a>
             <a href="/ui/import">Import</a>
             <a href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+            <button id="theme-toggle" type="button" class="theme-toggle" aria-live="polite">
+                Переключить тему
+            </button>
         </nav>
     </div>
 </header>

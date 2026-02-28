@@ -68,6 +68,12 @@ def build_event_filters(
     return filters
 
 
+def get_distinct_sources(db: Session) -> list[str]:
+    """Возвращает отсортированный список уникальных источников событий."""
+    rows = db.execute(select(Event.source).distinct().order_by(Event.source.asc())).all()
+    return [row[0] for row in rows]
+
+
 def list_events_payload(
     db: Session,
     *,

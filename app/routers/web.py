@@ -7,13 +7,11 @@ from urllib.parse import urlencode
 from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.dependencies import get_db
-from app.models import Event
 from app.services.dashboard_service import get_dashboard_payload, get_top_sources_payload
-from app.services.events_service import list_events_payload
+from app.services.events_service import get_distinct_sources, list_events_payload
 from app.services.import_service import import_csv_file, list_import_runs
 
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent.parent / "templates"))
@@ -74,6 +72,7 @@ def _build_events_context(
     error_message: str | None = None
 
     try:
+        # Запрашиваем limit+1, чтобы проверить наличие следующей страницы
         events = list_events_payload(
             db,
             level=level,
@@ -81,15 +80,17 @@ def _build_events_context(
             q=q,
             start=normalized_start,
             end=normalized_end,
-            limit=limit,
+            limit=limit + 1,
             offset=offset,
         )
     except HTTPException as exc:
         events = []
         error_message = str(exc.detail)
 
-    source_rows = db.execute(select(Event.source).distinct().order_by(Event.source.asc())).all()
-    sources = [row[0] for row in source_rows]
+    has_next = len(events) > limit
+    events = events[:limit]
+
+    sources = get_distinct_sources(db)
 
     base_params: dict[str, str | int | None] = {
         "level": level,
@@ -117,7 +118,7 @@ def _build_events_context(
 
     next_url = None
     next_table_url = None
-    if len(events) == limit:
+    if has_next:
         next_query = _build_query_string({**base_params, "offset": offset + limit})
         next_url = "/ui/events?" + next_query
         next_table_url = "/ui/events/table?" + next_query
@@ -147,7 +148,11 @@ def _build_events_context(
 
 
 def _build_import_context(db: Session, *, limit: int, offset: int) -> dict[str, object]:
-    imports = list_import_runs(db, limit=limit, offset=offset)
+    # Запрашиваем limit+1, чтобы проверить наличие следующей страницы
+    imports = list_import_runs(db, limit=limit + 1, offset=offset)
+
+    has_next = len(imports) > limit
+    imports = imports[:limit]
 
     prev_url = None
     if offset > 0:
@@ -155,7 +160,7 @@ def _build_import_context(db: Session, *, limit: int, offset: int) -> dict[str, 
         prev_url = "/ui/import?" + _build_query_string({"limit": limit, "offset": prev_offset})
 
     next_url = None
-    if len(imports) == limit:
+    if has_next:
         next_url = "/ui/import?" + _build_query_string({"limit": limit, "offset": offset + limit})
 
     return {

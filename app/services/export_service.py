@@ -11,6 +11,7 @@ from app.models import Event
 from app.services.events_service import build_event_filters
 
 EXPORT_HEADER = ["timestamp", "source", "level", "message", "metric_value", "tag"]
+MAX_EXPORT_ROWS = 5000
 
 
 def export_events_csv_rows(
@@ -26,7 +27,7 @@ def export_events_csv_rows(
     stmt = (
         select(Event.timestamp, Event.source, Event.level, Event.message, Event.metric_value, Event.tag)
         .order_by(Event.timestamp.desc())
-        .limit(5000)
+        .limit(MAX_EXPORT_ROWS)
     )
     if filters:
         stmt = stmt.where(and_(*filters))

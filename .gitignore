@@ -1,13 +1,21 @@
 *
 !.gitignore
 !ReadMe.md
+!requirements.txt
 !app/
 !app/**
 !data/
 !data/**
+!tests/
+!tests/**
+!screenshots/
+!screenshots/**
+!docs/
+!docs/**
+docs/practice.md
 
-# Ignore Python cache artifacts inside tracked app/data folders
+# Ignore Python cache artifacts inside tracked folders
 app/**/__pycache__/
 app/**/*.py[cod]
-data/**/__pycache__/
-data/**/*.py[cod]
+tests/**/__pycache__/
+tests/**/*.py[cod]
