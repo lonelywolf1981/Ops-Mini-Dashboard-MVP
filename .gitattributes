@@ -1,0 +1,17 @@
+# Нормализация переносов строк: в репозитории LF, на Windows git конвертирует автоматически
+* text=auto
+
+*.py     text eol=lf
+*.md     text eol=lf
+*.csv    text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.txt    text eol=lf
+*.toml   text eol=lf
+*.json   text eol=lf
+
+# Бинарные файлы — не трогать
+screenshots/*.png binary

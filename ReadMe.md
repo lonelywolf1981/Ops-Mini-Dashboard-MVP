@@ -1,5 +1,10 @@
 # Ops Mini Dashboard
 
+![CI](https://github.com/YOUR_USERNAME/ops-mini-dashboard/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.11+-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)
+![Ruff](https://img.shields.io/badge/linter-ruff-orange)
+
 Внутренний веб-инструмент для инженеров и техслужбы: загружаешь CSV с событиями — получаешь сводку, фильтрацию и экспорт.
 
 ---

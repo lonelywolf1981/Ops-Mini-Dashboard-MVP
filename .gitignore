@@ -1,5 +1,6 @@
 *
 !.gitignore
+!.gitattributes
 !ReadMe.md
 !requirements.txt
 !app/
@@ -12,7 +13,10 @@
 !screenshots/**
 !docs/
 !docs/**
+!.github/
+!.github/**
 docs/practice.md
+"docs/what is must do.md"
 
 # Ignore Python cache artifacts inside tracked folders
 app/**/__pycache__/
