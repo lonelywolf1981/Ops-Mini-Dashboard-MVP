@@ -43,18 +43,43 @@ Ops Mini Dashboard решает это без Excel и ручной фильтр
 ## Скриншоты
 
 ### Dashboard — светлая и тёмная тема
-![Dashboard light](screenshots/dashboard-light.png)
-![Dashboard dark](screenshots/dashboard-dark.png)
+
+<table>
+  <tr>
+    <td><img src="screenshots/dashboard-light.png" alt="Dashboard light" width="100%"></td>
+    <td><img src="screenshots/dashboard-dark.png" alt="Dashboard dark" width="100%"></td>
+  </tr>
+  <tr>
+    <td align="center">Светлая тема</td>
+    <td align="center">Тёмная тема</td>
+  </tr>
+</table>
 
 ### Фильтрация событий
-![Events — все уровни](screenshots/filter-any.png)
-![Events — только ERROR](screenshots/filter-error.png)
 
-### Импорт CSV
-![Import page](screenshots/import.png)
+<table>
+  <tr>
+    <td><img src="screenshots/filter-any.png" alt="Events — все уровни" width="100%"></td>
+    <td><img src="screenshots/filter-error.png" alt="Events — только ERROR" width="100%"></td>
+  </tr>
+  <tr>
+    <td align="center">Все уровни</td>
+    <td align="center">Только ERROR</td>
+  </tr>
+</table>
 
-### API-документация (Swagger)
-![API Docs](screenshots/api-docs.png)
+### Импорт CSV и API-документация
+
+<table>
+  <tr>
+    <td><img src="screenshots/import.png" alt="Import page" width="100%"></td>
+    <td><img src="screenshots/api-docs.png" alt="API Docs" width="100%"></td>
+  </tr>
+  <tr>
+    <td align="center">Импорт CSV</td>
+    <td align="center">Swagger / OpenAPI</td>
+  </tr>
+</table>
 
 ---
 
