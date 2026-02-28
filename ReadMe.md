@@ -124,27 +124,34 @@ uvicorn app.main:app --reload
 |---|---|
 | `http://127.0.0.1:8000/ui/dashboard` | Dashboard |
 | `http://127.0.0.1:8000/ui/events` | Список событий с фильтрами |
-| `http://127.0.0.1:8000/ui/import` | Загрузка CSV |
+| `http://127.0.0.1:8000/ui/import` | Загрузка CSV / JSON |
 | `http://127.0.0.1:8000/docs` | Swagger / OpenAPI |
 
 ---
 
 ## Загрузка демо-данных
 
-В репозитории есть готовый файл `data/sample_events.csv` с 20 событиями разных уровней и источников.
+В репозитории есть готовые файлы с событиями:
+- `data/sample_events.csv` — 20 событий в формате CSV
+- `data/sample_events.json` — 5 событий в формате JSON
 
 **Через веб-интерфейс:**
 1. Открыть `http://127.0.0.1:8000/ui/import`
-2. Нажать «Выберите файл», выбрать `data/sample_events.csv`
+2. Нажать «Выберите файл», выбрать `data/sample_events.csv` или `data/sample_events.json`
 3. Нажать «Загрузить»
 
 **Через API (curl):**
 ```bash
+# CSV
 curl -X POST http://127.0.0.1:8000/import \
      -F "file=@data/sample_events.csv"
+
+# JSON
+curl -X POST http://127.0.0.1:8000/import \
+     -F "file=@data/sample_events.json"
 ```
 
-Формат CSV описан в [`docs/data-format.md`](docs/data-format.md).
+Форматы описаны в [`docs/data-format.md`](docs/data-format.md).
 
 ---
 
