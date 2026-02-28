@@ -4,11 +4,15 @@
 
 {% block content %}
 <section class="panel">
-    <h2>Импорт CSV</h2>
-    <p class="muted">Поддерживается только CSV с заголовком: <code>timestamp,source,level,message,metric_value,tag</code></p>
+    <h2>Импорт CSV / JSON</h2>
+    <p class="muted">
+        Поддерживаются форматы:
+        CSV с заголовком <code>timestamp,source,level,message,metric_value,tag</code>
+        и JSON-массив объектов с теми же полями.
+    </p>
 
     <form method="post" action="/ui/import" enctype="multipart/form-data" class="upload-form">
-        <input type="file" name="file" accept=".csv,text/csv" required>
+        <input type="file" name="file" accept=".csv,.json,text/csv,application/json" required>
         <button type="submit" class="btn btn-primary">Загрузить</button>
     </form>
 

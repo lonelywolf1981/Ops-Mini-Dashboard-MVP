@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2026-02-28T21:05:00+05:00",
+    "source": "lab-stand-01",
+    "level": "INFO",
+    "message": "Experiment started",
+    "metric_value": null,
+    "tag": "experiment"
+  },
+  {
+    "timestamp": "2026-02-28T21:06:00+05:00",
+    "source": "sensor-temp-01",
+    "level": "INFO",
+    "message": "Temperature reading",
+    "metric_value": 3.125,
+    "tag": "temp"
+  },
+  {
+    "timestamp": "2026-02-28T21:08:00+05:00",
+    "source": "sensor-temp-01",
+    "level": "WARN",
+    "message": "Temperature drift above expected",
+    "metric_value": 3.45,
+    "tag": "temp"
+  },
+  {
+    "timestamp": "2026-02-28T21:09:10+05:00",
+    "source": "logger",
+    "level": "ERROR",
+    "message": "Write timeout while flushing chunk",
+    "metric_value": null,
+    "tag": "io"
+  },
+  {
+    "timestamp": "2026-02-28T21:10:30+05:00",
+    "source": "net-gw-01",
+    "level": "WARN",
+    "message": "Packet loss above threshold",
+    "metric_value": 12.5,
+    "tag": "network"
+  }
+]

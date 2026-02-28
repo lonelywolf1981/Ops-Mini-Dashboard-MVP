@@ -25,6 +25,19 @@ def sample_csv() -> str:
 
 
 @pytest.fixture()
+def sample_json() -> str:
+    """Базовый JSON с тремя событиями для повторного использования в тестах."""
+    return (
+        '[{"timestamp":"2026-02-28T21:06:00+05:00","source":"sensor-temp-01",'
+        '"level":"INFO","message":"Temperature reading","metric_value":3.125,"tag":"temp"},'
+        '{"timestamp":"2026-02-28T21:09:10+05:00","source":"logger",'
+        '"level":"ERROR","message":"Write timeout while flushing chunk","metric_value":null,"tag":"io"},'
+        '{"timestamp":"2026-02-28T21:10:00+05:00","source":"sensor-temp-01",'
+        '"level":"WARN","message":"Temperature drift above expected","metric_value":3.45,"tag":"temp"}]'
+    )
+
+
+@pytest.fixture()
 def db_session() -> Generator[Session, None, None]:
     engine = create_engine(
         "sqlite://",

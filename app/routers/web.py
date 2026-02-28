@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.dependencies import get_db
 from app.services.dashboard_service import get_dashboard_payload, get_top_sources_payload
 from app.services.events_service import get_distinct_sources, list_events_payload
-from app.services.import_service import import_csv_file, list_import_runs
+from app.services.import_service import import_file, list_import_runs
 
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent.parent / "templates"))
 
@@ -293,7 +293,7 @@ async def web_import_submit(
     error_message: str | None = None
 
     try:
-        result = await import_csv_file(file, db)
+        result = await import_file(file, db)
     except HTTPException as exc:
         error_message = str(exc.detail)
 

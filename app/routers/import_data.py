@@ -4,17 +4,17 @@ from fastapi import APIRouter, Depends, File, Query, UploadFile
 from sqlalchemy.orm import Session
 
 from app.dependencies import get_db
-from app.services.import_service import import_csv_file, list_import_runs
+from app.services.import_service import import_file, list_import_runs
 
 router = APIRouter(tags=["import"])
 
 
 @router.post("/import")
-async def import_csv(
+async def import_events(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ) -> dict[str, object]:
-    return await import_csv_file(file, db)
+    return await import_file(file, db)
 
 
 @router.get("/imports")

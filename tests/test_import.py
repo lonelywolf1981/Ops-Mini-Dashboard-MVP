@@ -130,3 +130,82 @@ def test_import_sanitizes_path_traversal_filename(client, sample_csv):
     assert response.status_code == 200
     # Должно сохраниться только имя файла без пути
     assert response.json()["filename"] == "passwd.csv"
+
+
+# ---------------------------------------------------------------------------
+# JSON import
+# ---------------------------------------------------------------------------
+
+def test_import_json_success(client, sample_json):
+    response = client.post(
+        "/import",
+        files={"file": ("events.json", sample_json, "application/json")},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["inserted"] == 3
+    assert payload["skipped"] == 0
+    assert payload["errors"] == 0
+    assert payload["filename"] == "events.json"
+
+
+def test_import_json_numeric_metric_value(client):
+    """JSON metric_value как число (не строка) должен корректно записываться."""
+    data = (
+        '[{"timestamp":"2026-02-28T21:06:00+05:00","source":"s","level":"INFO",'
+        '"message":"m","metric_value":42.5,"tag":null}]'
+    )
+    response = client.post(
+        "/import",
+        files={"file": ("events.json", data, "application/json")},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["inserted"] == 1
+
+
+def test_import_json_invalid_json(client):
+    response = client.post(
+        "/import",
+        files={"file": ("events.json", "not valid json{", "application/json")},
+    )
+
+    assert response.status_code == 400
+    assert "Invalid JSON" in response.json()["detail"]
+
+
+def test_import_json_not_a_list(client):
+    response = client.post(
+        "/import",
+        files={"file": ("events.json", '{"source":"s"}', "application/json")},
+    )
+
+    assert response.status_code == 400
+    assert "list" in response.json()["detail"].lower()
+
+
+def test_import_json_skips_invalid_level(client):
+    data = (
+        '[{"timestamp":"2026-02-28T21:06:00+05:00","source":"s","level":"DEBUG",'
+        '"message":"m","metric_value":null,"tag":null}]'
+    )
+    response = client.post(
+        "/import",
+        files={"file": ("events.json", data, "application/json")},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["inserted"] == 0
+    assert payload["skipped"] == 1
+
+
+def test_import_rejects_unsupported_extension(client):
+    response = client.post(
+        "/import",
+        files={"file": ("events.txt", "some data", "text/plain")},
+    )
+
+    assert response.status_code == 400
+    assert "supported" in response.json()["detail"].lower()

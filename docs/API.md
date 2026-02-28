@@ -33,7 +33,11 @@ Response: text/csv.
 ## 4) Import
 ### POST /import
 Form-data:
-- file: UploadFile (.csv)
+- file: UploadFile (.csv или .json)
+
+Поддерживаемые форматы:
+- `.csv` — строгий заголовок `timestamp,source,level,message,metric_value,tag`
+- `.json` — массив объектов с теми же полями
 
 Response:
 - import_run_id
