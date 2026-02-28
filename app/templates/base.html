@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Ops Mini Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-grid">
+        <div>
+            <p class="eyebrow">Ops Toolkit</p>
+            <h1 class="site-title">Ops Mini Dashboard</h1>
+        </div>
+        <nav class="site-nav">
+            <a href="/ui/dashboard">Dashboard</a>
+            <a href="/ui/events">Events</a>
+            <a href="/ui/import">Import</a>
+            <a href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container page-content">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

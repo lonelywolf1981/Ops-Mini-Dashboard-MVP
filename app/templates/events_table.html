@@ -1,0 +1,58 @@
+{% if error_message %}
+    <p class="error-box">Ошибка фильтра: {{ error_message }}</p>
+{% endif %}
+
+<div class="table-meta">
+    <h3>Результаты</h3>
+    <p class="muted">Offset: {{ offset }}, limit: {{ limit }}, rows: {{ events|length }}</p>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>timestamp</th>
+            <th>source</th>
+            <th>level</th>
+            <th>message</th>
+            <th>metric</th>
+            <th>tag</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in events %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.timestamp }}</td>
+                <td>{{ row.source }}</td>
+                <td><span class="level level-{{ row.level|lower }}">{{ row.level }}</span></td>
+                <td>{{ row.message }}</td>
+                <td>{{ row.metric_value if row.metric_value is not none else "" }}</td>
+                <td>{{ row.tag if row.tag is not none else "" }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="muted">Нет записей под текущие фильтры.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="pager">
+    {% if prev_url %}
+        <a class="btn"
+           href="{{ prev_url }}"
+           hx-get="{{ prev_table_url }}"
+           hx-target="#events-results"
+           hx-swap="innerHTML">Назад</a>
+    {% endif %}
+    {% if next_url %}
+        <a class="btn btn-primary"
+           href="{{ next_url }}"
+           hx-get="{{ next_table_url }}"
+           hx-target="#events-results"
+           hx-swap="innerHTML">Дальше</a>
+    {% endif %}
+</div>

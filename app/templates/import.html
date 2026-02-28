@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Import · Ops Mini Dashboard{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>Импорт CSV</h2>
+    <p class="muted">Поддерживается только CSV с заголовком: <code>timestamp,source,level,message,metric_value,tag</code></p>
+
+    <form method="post" action="/ui/import" enctype="multipart/form-data" class="upload-form">
+        <input type="file" name="file" accept=".csv,text/csv" required>
+        <button type="submit" class="btn btn-primary">Загрузить</button>
+    </form>
+
+    {% if result %}
+        <div class="success-box">
+            <p><strong>Импорт завершен.</strong></p>
+            <p>Run ID: {{ result.import_run_id }}</p>
+            <p>Inserted: {{ result.inserted }}, skipped: {{ result.skipped }}, errors: {{ result.errors }}</p>
+        </div>
+    {% endif %}
+
+    {% if error_message %}
+        <p class="error-box">Ошибка импорта: {{ error_message }}</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <h3>Последние импорты</h3>
+    <p class="muted">Offset: {{ offset }}, limit: {{ limit }}, rows: {{ imports|length }}</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>started_at</th>
+                <th>filename</th>
+                <th>inserted</th>
+                <th>skipped</th>
+                <th>errors</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in imports %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.started_at }}</td>
+                    <td>{{ row.filename }}</td>
+                    <td>{{ row.inserted }}</td>
+                    <td>{{ row.skipped }}</td>
+                    <td>{{ row.errors }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="muted">Импортов пока нет.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pager">
+        {% if prev_url %}
+            <a class="btn" href="{{ prev_url }}">Назад</a>
+        {% endif %}
+        {% if next_url %}
+            <a class="btn btn-primary" href="{{ next_url }}">Дальше</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard · Ops Mini Dashboard{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>Сводка</h2>
+    <p class="muted">Ключевые метрики по событиям из базы данных.</p>
+
+    <div class="card-grid">
+        <article class="metric-card">
+            <p class="metric-label">Total events</p>
+            <p class="metric-value">{{ dashboard.total }}</p>
+        </article>
+        <article class="metric-card">
+            <p class="metric-label">Unique sources</p>
+            <p class="metric-value">{{ dashboard.unique_sources }}</p>
+        </article>
+        <article class="metric-card">
+            <p class="metric-label">INFO</p>
+            <p class="metric-value">{{ dashboard.by_level.get("INFO", 0) }}</p>
+        </article>
+        <article class="metric-card">
+            <p class="metric-label">WARN</p>
+            <p class="metric-value">{{ dashboard.by_level.get("WARN", 0) }}</p>
+        </article>
+        <article class="metric-card">
+            <p class="metric-label">ERROR</p>
+            <p class="metric-value">{{ dashboard.by_level.get("ERROR", 0) }}</p>
+        </article>
+    </div>
+</section>
+
+<section class="panel split-grid">
+    <article>
+        <h3>События по дням</h3>
+        {% if dashboard.by_day %}
+            <ul class="bar-list">
+                {% for row in dashboard.by_day %}
+                    <li>
+                        <span>{{ row.day }}</span>
+                        <div class="bar-wrap">
+                            <div class="bar" style="width: {{ (row.count / day_max * 100) if day_max else 0 }}%"></div>
+                        </div>
+                        <strong>{{ row.count }}</strong>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="muted">Пока нет данных для графика по дням.</p>
+        {% endif %}
+    </article>
+
+    <article>
+        <h3>Top sources (ERROR / WARN)</h3>
+        <div class="top-sources">
+            <div>
+                <h4>ERROR</h4>
+                <ul>
+                    {% for item in top_sources.ERROR %}
+                        <li><span>{{ item.source }}</span><strong>{{ item.count }}</strong></li>
+                    {% else %}
+                        <li class="muted">Нет данных</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h4>WARN</h4>
+                <ul>
+                    {% for item in top_sources.WARN %}
+                        <li><span>{{ item.source }}</span><strong>{{ item.count }}</strong></li>
+                    {% else %}
+                        <li class="muted">Нет данных</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </article>
+</section>
+
+<section class="panel">
+    <h3>Последние события</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>timestamp</th>
+                <th>source</th>
+                <th>level</th>
+                <th>message</th>
+                <th>metric</th>
+                <th>tag</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in dashboard.latest %}
+                <tr>
+                    <td>{{ row.timestamp }}</td>
+                    <td>{{ row.source }}</td>
+                    <td><span class="level level-{{ row.level|lower }}">{{ row.level }}</span></td>
+                    <td>{{ row.message }}</td>
+                    <td>{{ row.metric_value if row.metric_value is not none else "" }}</td>
+                    <td>{{ row.tag if row.tag is not none else "" }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="muted">Нет событий. Загрузите CSV на вкладке Import.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

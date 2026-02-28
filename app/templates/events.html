@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Events · Ops Mini Dashboard{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>Поиск и фильтрация событий</h2>
+    <p class="muted">Фильтры применяются к таблице и к CSV-экспорту.</p>
+
+    <form method="get"
+          action="/ui/events"
+          class="filters-grid"
+          hx-get="/ui/events/table"
+          hx-target="#events-results"
+          hx-swap="innerHTML">
+        <label>
+            Level
+            <select name="level">
+                <option value="" {% if not level %}selected{% endif %}>Любой</option>
+                <option value="INFO" {% if level == "INFO" %}selected{% endif %}>INFO</option>
+                <option value="WARN" {% if level == "WARN" %}selected{% endif %}>WARN</option>
+                <option value="ERROR" {% if level == "ERROR" %}selected{% endif %}>ERROR</option>
+            </select>
+        </label>
+
+        <label>
+            Source
+            <input type="text" name="source" value="{{ source }}" list="source-list" placeholder="sensor-temp-01">
+            <datalist id="source-list">
+                {% for item in sources %}
+                    <option value="{{ item }}"></option>
+                {% endfor %}
+            </datalist>
+        </label>
+
+        <label>
+            Query in message
+            <input type="text" name="q" value="{{ q }}" placeholder="timeout">
+        </label>
+
+        <label>
+            Start (local)
+            <input type="datetime-local" name="start" value="{{ start }}">
+        </label>
+
+        <label>
+            End (local)
+            <input type="datetime-local" name="end" value="{{ end }}">
+        </label>
+
+        <label>
+            Limit
+            <input type="number" name="limit" min="1" max="500" value="{{ limit }}">
+        </label>
+
+        <input type="hidden" name="offset" value="0">
+
+        <div class="filters-actions">
+            <button type="submit" class="btn btn-primary">Применить</button>
+            <a class="btn" href="/ui/events">Сбросить</a>
+            <a class="btn" href="{{ export_url }}">Экспорт CSV</a>
+        </div>
+    </form>
+</section>
+
+<section class="panel">
+    <div id="events-results">
+        {% include "events_table.html" %}
+    </div>
+</section>
+{% endblock %}
