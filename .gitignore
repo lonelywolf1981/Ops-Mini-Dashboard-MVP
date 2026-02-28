@@ -1,0 +1,7 @@
+*
+!.gitignore
+!ReadMe.md
+!app/
+!app/**
+!data/
+!data/**
