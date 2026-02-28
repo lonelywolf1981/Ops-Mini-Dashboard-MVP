@@ -5,6 +5,7 @@ import io
 from datetime import datetime
 
 from fastapi import HTTPException, UploadFile
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models import Event, ImportRun
@@ -93,3 +94,30 @@ async def import_csv_file(file: UploadFile, db: Session) -> dict[str, object]:
         "skipped": skipped,
         "errors": errors,
     }
+
+
+def list_import_runs(
+    db: Session,
+    *,
+    limit: int,
+    offset: int,
+) -> list[dict[str, object]]:
+    stmt = (
+        select(ImportRun)
+        .order_by(ImportRun.started_at.desc(), ImportRun.id.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    rows = db.scalars(stmt).all()
+
+    return [
+        {
+            "id": run.id,
+            "started_at": run.started_at.isoformat(),
+            "filename": run.filename,
+            "inserted": run.inserted,
+            "skipped": run.skipped,
+            "errors": run.errors,
+        }
+        for run in rows
+    ]

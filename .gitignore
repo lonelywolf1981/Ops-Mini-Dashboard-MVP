@@ -5,3 +5,9 @@
 !app/**
 !data/
 !data/**
+
+# Ignore Python cache artifacts inside tracked app/data folders
+app/**/__pycache__/
+app/**/*.py[cod]
+data/**/__pycache__/
+data/**/*.py[cod]

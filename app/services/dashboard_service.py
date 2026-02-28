@@ -54,3 +54,24 @@ def get_dashboard_payload(db: Session) -> dict[str, object]:
         "by_day": by_day,
         "latest": latest,
     }
+
+
+def get_top_sources_payload(
+    db: Session,
+    *,
+    limit: int,
+) -> dict[str, list[dict[str, object]]]:
+    result: dict[str, list[dict[str, object]]] = {}
+
+    for level in ("ERROR", "WARN"):
+        rows = db.execute(
+            select(Event.source, func.count(Event.id).label("count"))
+            .where(Event.level == level)
+            .group_by(Event.source)
+            .order_by(func.count(Event.id).desc(), Event.source.asc())
+            .limit(limit)
+        ).all()
+
+        result[level] = [{"source": source, "count": count} for source, count in rows]
+
+    return result
